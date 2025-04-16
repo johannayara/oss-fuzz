@@ -20,5 +20,7 @@ RUN apt-get update && \
 
 RUN git clone --depth 1 https://github.com/madler/zlib.git
 RUN git clone --depth 1 https://github.com/pnggroup/libpng.git
-RUN cp libpng/contrib/oss-fuzz/build.sh $SRC
+### build our own fuzzer 
+COPY build.sh $SRC
+#RUN cp libpng/contrib/oss-fuzz/build.sh $SRC
 WORKDIR libpng
