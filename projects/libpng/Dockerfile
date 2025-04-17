@@ -22,18 +22,9 @@ RUN apt-get update && \
 
 RUN git clone --depth 1 https://github.com/madler/zlib.git
 RUN git clone --depth 1 https://github.com/pnggroup/libpng.git
-ARG SCRIPT_CALLER=w_corpus
+ARG SCRIPT_CALLER=w_o_corpus
 ENV SCRIPT_CALLER=${SCRIPT_CALLER}
-# Run setup steps
-RUN echo "Called by: $SCRIPT_CALLER" && \
-    if [ "$SCRIPT_CALLER" = "w_corpus" ]; then \
-        echo "Running command for A.sh"; \
-        cp libpng/contrib/oss-fuzz/build.sh $SRC; \
-    elif [ "$SCRIPT_CALLER" = "w_o_corpus" ]; then \
-        echo "Running command for B.sh"; \
-        cp build.sh $SRC; \
-    else \
-        echo "Unknown caller, running default"; \
-        cp libpng/contrib/oss-fuzz/build.sh $SRC; \
-    fi
+
+COPY build.sh $SRC
+
 WORKDIR libpng
