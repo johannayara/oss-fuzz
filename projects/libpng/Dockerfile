@@ -22,8 +22,6 @@ RUN apt-get update && \
 
 RUN git clone --depth 1 https://github.com/madler/zlib.git
 RUN git clone --depth 1 https://github.com/pnggroup/libpng.git
-ARG SCRIPT_CALLER=w_o_corpus
-ENV SCRIPT_CALLER=${SCRIPT_CALLER}
 
 COPY build.sh $SRC
 
