@@ -30,9 +30,6 @@ DIR="build/out/${NAME}w_o_corpus"
 
 echo "Created directory: $DIR"
 
-# Set value of which docker command to run 
-export SCRIPT_CALLER=w_o_corpus
-echo "script caller : $SCRIPT_CALLER"
 
 # Build the Docker image for libpng
 python3 infra/helper.py build_image libpng
