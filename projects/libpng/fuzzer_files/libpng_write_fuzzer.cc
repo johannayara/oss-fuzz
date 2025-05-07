@@ -60,12 +60,21 @@ static uint8_t read_u8(const uint8_t** ptr, size_t* remaining) {
   *ptr += 1; *remaining -= 1;
   return v;
 }
-
+// --- New helper to read 32-bit little-endian from the fuzz input ---
+static uint32_t read_u32(const uint8_t** ptr, size_t* remaining) {
+  if (*remaining < 4) return 0;
+  uint32_t v = (uint32_t)(*ptr)[0]
+               | ((uint32_t)(*ptr)[1] << 8)
+               | ((uint32_t)(*ptr)[2] << 16)
+               | ((uint32_t)(*ptr)[3] << 24);
+  *ptr += 4; *remaining -= 4;
+  return v;
+}
 // --- Entry point for LibFuzzer ---
 extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
                                        size_t size) {
   // Need at least a few bytes to derive parameters
-  if (size < 10) return 0; // must contain IHDR chunk + IDAT + IEND chunks
+  if (size < 16) return 0; // must contain IHDR chunk + IDAT + IEND chunks
   const uint8_t* ptr = data;
   size_t         rem = size;
 
@@ -92,15 +101,15 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   png_set_write_fn(handler.png_ptr, nullptr,
                    user_write_data, user_flush);
 
-  // 5) Derive IHDR parameters
+  // 5) Derive IHDR parameters: 16 bytes
 
-  //   width, height: from 2 bytes each, scaled to [1..512]
-  uint16_t rw = read_u16(&ptr, &rem);
-  uint16_t rh = read_u16(&ptr, &rem);
-  png_uint_32 width  = (rw % 511) + 1;
-  png_uint_32 height = (rh % 511) + 1;
+  //   width, height: map 4 bytes
+  uint32_t rw = read_u32(&ptr, &rem);
+  uint32_t rh = read_u32(&ptr, &rem);
+  png_uint_32 width  = (rw % 2048) + 1;
+  png_uint_32 height = (rh % 2048) + 1;
 
-  //   bit_depth: map one byte to {1,2,4,8,16}
+  //   bit_depth: map 1 byte to {1,2,4,8,16}
   uint8_t bd0 = read_u8(&ptr, &rem);
   int bit_depth;
   switch (bd0 % 5) {
@@ -115,18 +124,19 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   uint8_t ct0 = read_u8(&ptr, &rem);
   int color_type;
   switch (ct0 % 5) {
-    case 0: color_type = PNG_COLOR_TYPE_GRAY; break;
-    case 1: color_type = PNG_COLOR_TYPE_PALETTE; break;
-    case 2: color_type = PNG_COLOR_TYPE_RGB; break;
-    case 3: color_type = PNG_COLOR_TYPE_GRAY_ALPHA; break;
-    default: color_type = PNG_COLOR_TYPE_RGB_ALPHA; break;
+    case 0: color_type = PNG_COLOR_TYPE_GRAY; break; //0
+    case 1: color_type = PNG_COLOR_TYPE_RGB_ALPHA; break; //6
+    case 2: color_type = PNG_COLOR_TYPE_RGB; break; //2
+    case 3: color_type = PNG_COLOR_TYPE_PALETTE; break; //3: PNG_COLOR_TYPE_PALETTE
+    default: color_type = PNG_COLOR_TYPE_GRAY_ALPHA; break; //4: PNG_COLOR_TYPE_GRAY_ALPHA
   }
 
-  //  Basic adjustments
+  //  Adjustements to bit_depth based on color_type
   if (color_type == PNG_COLOR_TYPE_PALETTE && bit_depth > 8)
     bit_depth = 8;
   if ((color_type == PNG_COLOR_TYPE_GRAY_ALPHA ||
-       color_type == PNG_COLOR_TYPE_RGB_ALPHA) &&
+       color_type == PNG_COLOR_TYPE_RGB_ALPHA ||
+        color_type == PNG_COLOR_TYPE_RGB) &&
       bit_depth < 8)
     bit_depth = 8;
 
@@ -146,21 +156,23 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
 
   // gAMA: 1-in-3 chance
   if (rem >= 2 && (read_u8(&ptr, &rem) % 3) == 0) {
-    uint16_t rg = read_u16(&ptr, &rem);
-    double   gamma = (double)rg / 65535.0 * 2.9 + 0.1;
+    //uint16_t rg = read_u16(&ptr, &rem); //TODO: use read_u32
+    double   gamma = 0.45455;  //TODO: check if this is a valid gamma value
     png_set_gAMA(handler.png_ptr, handler.info_ptr, gamma);
   }
 
   // bKGD: 1-in-4 chance
   if (rem >= 6 && (read_u8(&ptr, &rem) % 4) == 0) {
     png_color_16 bkgd;
-    bkgd.index = read_u8(&ptr, &rem);
+    bkgd.index = read_u8(&ptr, &rem); 
     bkgd.red   = read_u16(&ptr, &rem);
     bkgd.green = read_u16(&ptr, &rem);
     bkgd.blue  = read_u16(&ptr, &rem);
-    bkgd.gray  = read_u16(&ptr, &rem);
+    bkgd.gray  = read_u16(&ptr, &rem); 
     png_set_bKGD(handler.png_ptr, handler.info_ptr, &bkgd);
   }
+
+  //TODO: look at wtran 
 
   // TODO: add more optional chunks
 
@@ -191,7 +203,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
     png_write_row(handler.png_ptr, (png_bytep)handler.row_buf);
   }
 
-  // 9) IEND: write the end chunk
+  // 9) IEND: write the end chunk: 2 bytes
   png_write_end(handler.png_ptr, handler.info_ptr);
 
   // Cleanup happens in ~PngWriteHandler()
