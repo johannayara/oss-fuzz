@@ -156,16 +156,20 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
                PNG_FILTER_TYPE_DEFAULT);
 
   // 6) Other chunks: they are optional, so we use a 1-in-N chance (randomly)
-
+  png_size_t rowbytes = png_get_rowbytes(handler.png_ptr, handler.info_ptr); 
+  if (rowbytes == 0) { 
+    return 0;
+  }
+  const png_size_t IDAT_size = rowbytes * height;
   // gAMA: 1-in-3 chance
-  if (rem >= 2 && (read_u8(&ptr, &rem) % 3) == 0) {
+  if ((rem >= 2 + IDAT_size) && (read_u8(&ptr, &rem) % 3) == 0) {
     //uint16_t rg = read_u16(&ptr, &rem); //TODO: use read_u32
     double   gamma = 0.45455;  
     png_set_gAMA(handler.png_ptr, handler.info_ptr, gamma);
   }
 
   // bKGD: 1-in-4 chance
-  if (rem >= 6 && (read_u8(&ptr, &rem) % 4) == 0) {
+  if ((rem >= 6 && + IDAT_size) && (read_u8(&ptr, &rem) % 4) == 0) {
     png_color_16 bkgd;
     bkgd.index = read_u8(&ptr, &rem); 
     bkgd.red   = read_u16(&ptr, &rem);
@@ -175,18 +179,63 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
     png_set_bKGD(handler.png_ptr, handler.info_ptr, &bkgd);
   }
 
-  //TODO: look at wtran 
+    // tEXt or ztext: 1-in-5 chance
+  uint8_t text_is_defined = 0;
+  if ((rem >= 2  + IDAT_size) && (read_u8(&ptr, &rem) % 5) == 0) {
+    png_text text;
+    text.compression = (read_u8(&ptr, &rem) % 2 == 0) ? PNG_TEXT_COMPRESSION_NONE : PNG_TEXT_COMPRESSION_zTXt;
+    text.key = (char*)"Comment";
+    text.text = (char*)"Hello :)"; 
+    text.text_length = strlen(text.text);
+    png_set_text(handler.png_ptr, handler.info_ptr, &text, 1);
+    text_is_defined = 1;
+  }
+  
+  // pHYs: 1-in-4 chance
+  if ((rem >= 9 + IDAT_size) && (read_u8(&ptr, &rem) % 4) == 0) {
+    png_uint_32 x_pixels_per_unit = read_u32(&ptr, &rem);
+    png_uint_32 y_pixels_per_unit = read_u32(&ptr, &rem);
+    int unit_specifier = read_u8(&ptr, &rem) % 2;
+    png_set_pHYs(handler.png_ptr, handler.info_ptr,
+                x_pixels_per_unit, y_pixels_per_unit, unit_specifier);
+  }
 
-  // TODO: add more optional chunks
+  // tIME: 1-in-4 chance
+  if ((rem >= 7 + IDAT_size) && (read_u8(&ptr, &rem) % 4) == 0) {
+    png_timep mod_time = (png_timep)png_malloc(handler.png_ptr, sizeof(png_time));
+    if (!mod_time) return 0;
+    mod_time->year = read_u16(&ptr, &rem);
+    mod_time->month = read_u8(&ptr, &rem);
+    mod_time->day = read_u8(&ptr, &rem);
+    mod_time->hour = read_u8(&ptr, &rem);
+    mod_time->minute = read_u8(&ptr, &rem);
+    mod_time->second = read_u8(&ptr, &rem);
+    png_set_tIME(handler.png_ptr, handler.info_ptr, mod_time);
+    png_free(handler.png_ptr, mod_time);
+  }
+
+  //cHRM: 1-in-25 chance
+  if ((rem >= 32 + IDAT_size) && (read_u8(&ptr, &rem) % 25) == 0) {
+    png_fixed_point white_x = read_u32(&ptr, &rem);
+    png_fixed_point white_y = read_u32(&ptr, &rem);
+    png_fixed_point red_x = read_u32(&ptr, &rem);
+    png_fixed_point red_y = read_u32(&ptr, &rem);
+    png_fixed_point green_x = read_u32(&ptr, &rem);
+    png_fixed_point green_y = read_u32(&ptr, &rem);
+    png_fixed_point blue_x = read_u32(&ptr, &rem);
+    png_fixed_point blue_y = read_u32(&ptr, &rem);
+    png_set_cHRM(handler.png_ptr, handler.info_ptr,
+                white_x, white_y,
+                red_x, red_y,
+                green_x, green_y,
+                blue_x, blue_y);
+  }
 
   // 7) Write info
   png_write_info(handler.png_ptr, handler.info_ptr);
 
   // 8) Allocate a row buffer and write rows
-  png_size_t rowbytes = png_get_rowbytes(handler.png_ptr, handler.info_ptr); 
-  if (rowbytes == 0) { 
-    return 0;
-  }
+ 
   handler.rows = (png_bytepp)png_malloc(handler.png_ptr, sizeof(png_bytep) * height);
   if (!handler.rows) return 0;
 
