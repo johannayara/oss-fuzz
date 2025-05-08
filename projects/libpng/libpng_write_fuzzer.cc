@@ -33,15 +33,19 @@ static void default_free(png_structp, png_voidp ptr) {
 struct PngWriteHandler {
   png_structp png_ptr = nullptr; // The main structure that holds the state of the PNG writing process.
   png_infop   info_ptr = nullptr; //Holds metadata about the PNG file (e.g., width, height, bit depth, color type, optional chunks like gAMA, bKGD, etc.).
-  png_voidp   row_buf  = nullptr; // A buffer to hold one row of pixel data during the writing process.
+  png_bytepp rows  = nullptr; // A buffer to hold one row of pixel data during the writing process.
 
   ~PngWriteHandler() {
-    if (row_buf) {
-      png_free(png_ptr, row_buf);
-      row_buf = nullptr;
+    if (rows) {
+      for (png_uint_32 y = 0; y < png_get_image_height(png_ptr, info_ptr); y++) {
+        png_free(png_ptr, rows[y]);
+      }
+      png_free(png_ptr, rows);
+      rows = nullptr;
     }
     if (png_ptr || info_ptr) {
       png_destroy_write_struct(&png_ptr, &info_ptr);
+      
     }
   }
 };
@@ -97,7 +101,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
 
   // 4) Set up the write callback
-  //   (we don't care about the output, so we use a no-op callback)
   png_set_write_fn(handler.png_ptr, nullptr,
                    user_write_data, user_flush);
 
@@ -157,7 +160,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   // gAMA: 1-in-3 chance
   if (rem >= 2 && (read_u8(&ptr, &rem) % 3) == 0) {
     //uint16_t rg = read_u16(&ptr, &rem); //TODO: use read_u32
-    double   gamma = 0.45455;  //TODO: check if this is a valid gamma value
+    double   gamma = 0.45455;  
     png_set_gAMA(handler.png_ptr, handler.info_ptr, gamma);
   }
 
@@ -180,32 +183,35 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   png_write_info(handler.png_ptr, handler.info_ptr);
 
   // 8) Allocate a row buffer and write rows
-  png_size_t rowbytes = png_get_rowbytes(handler.png_ptr, handler.info_ptr);
-  if (rowbytes == 0 || rowbytes > width * 4 * 2 + 100) {
+  png_size_t rowbytes = png_get_rowbytes(handler.png_ptr, handler.info_ptr); 
+  if (rowbytes == 0) { 
     return 0;
   }
-  handler.row_buf = png_malloc(handler.png_ptr, rowbytes);
-  if (!handler.row_buf) return 0;
+  handler.rows = (png_bytepp)png_malloc(handler.png_ptr, sizeof(png_bytep) * height);
+  if (!handler.rows) return 0;
 
   // IDAT: write the image data
-  const uint8_t* pix = ptr;
-  size_t pix_rem = rem;
-  size_t pix_off = 0;
-
   for (png_uint_32 y = 0; y < height; y++) {
-    for (png_size_t i = 0; i < rowbytes; i++) {
-      if (pix_rem) {
-        ((png_byte*)handler.row_buf)[i] = pix[pix_off++ % pix_rem];
-      } else {
-        ((png_byte*)handler.row_buf)[i] = (png_byte)((y + i) % 256);
+    handler.rows[y] = (png_bytep)png_malloc(handler.png_ptr, rowbytes);
+
+    if(!handler.rows[y]) {
+      for (png_uint_32 i = 0; i < y; i++) {
+        png_free(handler.png_ptr, handler.rows[i]);
       }
+      png_free(handler.png_ptr, handler.rows);
+      return 0;
     }
-    png_write_row(handler.png_ptr, (png_bytep)handler.row_buf);
+    
+    memccpy(handler.rows[y], ptr, 0, (rem > rowbytes) ? rowbytes : 0);
+    ptr += rowbytes; rem -= rowbytes;
   }
+  png_set_rows(handler.png_ptr, handler.info_ptr, handler.rows);
+  
+  png_write_image(handler.png_ptr, handler.rows);
 
   // 9) IEND: write the end chunk: 2 bytes
   png_write_end(handler.png_ptr, handler.info_ptr);
 
-  // Cleanup happens in ~PngWriteHandler()
+ 
   return 0;
 }
