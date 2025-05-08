@@ -201,9 +201,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
       png_free(handler.png_ptr, handler.rows);
       return 0;
     }
+    if(rem >rowbytes) {
+      memccpy(handler.rows[y], ptr, 0, rowbytes);
+      ptr += rowbytes; rem -= rowbytes;
+    } else {
+      memset(handler.rows[y], 0, rowbytes);
+    }
     
-    memccpy(handler.rows[y], ptr, 0, (rem > rowbytes) ? rowbytes : 0);
-    ptr += rowbytes; rem -= rowbytes;
+    
   }
   png_set_rows(handler.png_ptr, handler.info_ptr, handler.rows);
   
