@@ -1445,6 +1445,7 @@ def run_fuzzer(args):
       'timeout',
       '14400',  # 4 hours 14400
       'run_fuzzer',
+      '-fork=1', # disable stopping on crash 
       args.fuzzer_name,
   ] + args.fuzzer_args)
 
