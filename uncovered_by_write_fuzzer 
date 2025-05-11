@@ -1,0 +1,141 @@
+#ifdef PNG_SET_UNKNOWN_CHUNKS_SUPPORTED
+#ifdef PNG_MNG_FEATURES_SUPPORTED
+if ((info_ptr->valid & PNG_INFO_sBIT) != 0)
+    png_write_sBIT(png_ptr, &(info_ptr->sig_bit), info_ptr->color_type);
+
+
+if ((info_ptr->valid & PNG_INFO_cLLI) != 0){
+    png_write_cLLI_fixed(png_ptr, info_ptr->maxCLL, info_ptr->maxFALL);
+}
+
+if ((info_ptr->valid & PNG_INFO_mDCV) != 0){
+    png_write_mDCV_fixed(png_ptr,
+                         info_ptr->mastering_red_x, info_ptr->mastering_red_y,
+                         etc ...
+
+}
+
+if ((info_ptr->valid & PNG_INFO_cICP) != 0){
+    png_write_cICP(png_ptr,....
+}
+
+if ((info_ptr->valid & PNG_INFO_iCCP) != 0){
+    png_write_iCCP(png_ptr, info_ptr->iccp_name,
+}
+
+if ((info_ptr->valid & PNG_INFO_sRGB) != 0){
+    png_write_sRGB(png_ptr, info_ptr->rendering_intent);
+}
+
+if ((info_ptr->valid & PNG_INFO_PLTE) != 0){
+    png_write_PLTE(png_ptr, info_ptr->palette,...
+}
+
+if ((info_ptr->valid & PNG_INFO_tRNS) !=0){
+    //plein de  code 
+}
+
+if ((info_ptr->valid & PNG_INFO_eXIf) != 0){
+    png_write_eXIf(png_ptr, info_ptr->exif, info_ptr->num_exif);
+    png_ptr->mode |= PNG_WROTE_eXIf;
+}
+
+if ((info_ptr->valid & PNG_INFO_hIST) != 0){
+    png_write_hIST(png_ptr, info_ptr->hist, info_ptr->num_palette);
+}
+
+if ((info_ptr->valid & PNG_INFO_oFFs) != 0){
+    png_write_oFFs(png_ptr, info_ptr->x_offset, info_ptr->y_offset,
+}
+if ((info_ptr->valid & PNG_INFO_pCAL) != 0){
+    png_write_pCAL(png_ptr, info_ptr->pcal_purpose, info_ptr->pcal_X0,
+}
+
+if ((info_ptr->valid & PNG_INFO_sCAL) != 0){
+    png_write_sCAL_s(png_ptr, (int)info_ptr->scal_unit,
+}
+
+ if ((info_ptr->valid & PNG_INFO_sPLT) != 0){
+     for (i = 0; i < (int)info_ptr->splt_palettes_num; i++)
+     png_write_sPLT(png_ptr, info_ptr->splt_palettes + i);
+ }
+ if (info_ptr->text[i].compression > 0){
+     #ifdef PNG_WRITE_iTXt_SUPPORTED
+ }
+
+//////BIZARRRE //////
+if ((info_ptr->valid & PNG_INFO_tIME) != 0 &&
+    (png_ptr->mode & PNG_WROTE_tIME) == 0){
+       png_write_tIME(png_ptr, &(info_ptr->mod_time)); 
+    }
+
+#ifdef PNG_WRITE_iTXt_SUPPORTED
+
+
+//////BIZARRRE //////
+#ifdef PNG_WRITE_zTXt_SUPPORTED 
+
+//////BIZARRRE //////
+#ifdef PNG_WRITE_tEXt_SUPPORTED
+
+#ifdef PNG_WRITE_eXIf_SUPPORTED
+
+png_convert_from_struct_tm(png_timep ptime, const struct tm * ttime)
+
+png_convert_from_time_t(png_timep ptime, time_t ttime)
+
+////// target line 530 -> memset looks vulnerable 
+
+
+png_write_rows
+
+png_do_write_intrapixel
+
+png_set_flush
+
+png_write_flush
+
+png_set_filter
+
+png_set_compression_mem_level
+
+png_set_compression_strategy
+
+png_set_compression_window_bits
+
+png_set_text_compression_level
+
+png_set_text_compression_mem_level
+
+png_set_text_compression_strategy
+
+png_set_text_compression_window_bits
+
+png_set_text_compression_method
+
+png_set_write_status_fn
+png_set_write_user_transform_fn
+
+png_write_png
+
+png_image_write_init
+
+png_write_image_16bit
+
+png_unpremultiply
+
+png_write_image_8bit
+
+png_image_set_PLTE
+
+png_image_write_main
+
+image_memory_write
+
+image_memory_flush
+
+png_image_write_memory
+
+png_image_write_to_memory
+
+png_image_write_to_stdio

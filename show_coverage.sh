@@ -23,7 +23,7 @@ fi
 python3 infra/helper.py build_fuzzers --sanitizer coverage libpng
 
 # Build the fuzzers for libpng
-python3 infra/helper.py coverage libpng --corpus-dir "$DIR" --fuzz-target libpng_read_fuzzer --port "$PORT"
+python3 infra/helper.py coverage libpng --corpus-dir "$DIR" --fuzz-target libpng_write_fuzzer --port "$PORT"
 
 
 
