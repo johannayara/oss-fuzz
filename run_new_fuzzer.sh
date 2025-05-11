@@ -5,7 +5,7 @@ set -e
 
 # Create directory with provided name 
 # NAME="${1:-}"
-DIR="build/out/write_corpus"
+DIR="build/out/write_corpus_30min"
 
 echo "Created directory: $DIR"
 
