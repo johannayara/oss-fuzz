@@ -1,5 +1,6 @@
 #ifdef PNG_SET_UNKNOWN_CHUNKS_SUPPORTED
 #ifdef PNG_MNG_FEATURES_SUPPORTED
+
 if ((info_ptr->valid & PNG_INFO_sBIT) != 0)
     png_write_sBIT(png_ptr, &(info_ptr->sig_bit), info_ptr->color_type);
 
