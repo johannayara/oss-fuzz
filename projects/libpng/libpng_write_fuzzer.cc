@@ -180,15 +180,23 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
 
     // tEXt or ztext: 1-in-5 chance
-  uint8_t text_is_defined = 0;
-  if ((rem >= 2  + IDAT_size) && (read_u8(&ptr, &rem) % 5) == 0) {
+  if ((rem >= 2  + IDAT_size)) {
     png_text text;
-    text.compression = (read_u8(&ptr, &rem) % 2 == 0) ? PNG_TEXT_COMPRESSION_NONE : PNG_TEXT_COMPRESSION_zTXt;
+    uint8_t ct0 = read_u8(&ptr, &rem);
+
+    switch (ct0 % 3) {
+      case 0: text.compression = PNG_TEXT_COMPRESSION_NONE; break; //tEXt
+      case 1: text.compression = PNG_TEXT_COMPRESSION_zTXt; break; //zTXt
+      case 2: 
+        text.compression = PNG_ITXT_COMPRESSION_NONE;
+        text.lang = (char*)"en";
+        text.lang_key = (char*)"Comment";
+        break; //iTXt
+    }
     text.key = (char*)"Comment";
     text.text = (char*)"Hello :)"; 
     text.text_length = strlen(text.text);
     png_set_text(handler.png_ptr, handler.info_ptr, &text, 1);
-    text_is_defined = 1;
   }
   
   // pHYs: 1-in-4 chance
