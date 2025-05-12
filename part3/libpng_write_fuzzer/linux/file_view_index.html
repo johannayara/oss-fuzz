@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <meta charset='UTF-8'>
+    <link rel='stylesheet' type='text/css' href='../style.css'>
+    <!-- Custom style overrides -->
+    <style>
+      /* Copyright 2018 The Chromium Authors. All rights reserved.
+ * Use of this source code is governed by a BSD-style license that can be
+ * found in the LICENSE file. */
+
+th, td {
+  padding: 5px 16px;
+}
+
+tbody td, tfoot td {
+  font-size: 14px;
+}
+
+thead th {
+  font-size: 16px;
+}
+
+thead th, tfoot td {
+  background-color: #f5f5f5;
+  border-left: 1px solid #e4e4e4;
+  border-right: 1px solid #e4e4e4;
+  color: #484848;
+  text-transform: uppercase;
+}
+
+tbody tr:hover td, tfoot tr:hover td {
+  background-color: #f5f5f5;
+  border-color: #e4e4e4 !important;
+}
+    </style>
+  </head>
+  <body>
+    <h2>Coverage Report</h2>
+    <p>
+      View results by:
+            <a href='directory_view_index.html'>Directories</a>
+              | <a href='file_view_index.html'>Files</a>
+          </p>
+    <div class='centered'><table>
+  <thead>
+    <tr>
+      <th class="column-entry-bold">Path</th>
+      <th class="column-entry-bold" onclick="sortTable(SORT_COLUMN.LINE)" title=
+          "Line coverage is the percentage of code lines which have been executed at least once. Only executable lines within function bodies are considered to be code lines.">
+        Line Coverage
+      </th>
+      <th class="column-entry-bold" onclick="sortTable(SORT_COLUMN.FUNCTION)" title=
+          "Function coverage is the percentage of functions which have been executed at least once. A function is considered to be executed if any of its instantiations are executed.">
+        Function Coverage
+      </th>
+      <th class="column-entry-bold" onclick="sortTable(SORT_COLUMN.REGION)" title=
+          "Region coverage is the percentage of code regions which have been executed at least once. A code region may span multiple lines (e.g in a large function body with no control flow). However, it's also possible for a single line to contain multiple code regions (e.g in 'return x || y &amp;&amp; z').">
+        Region Coverage
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/contrib/oss-fuzz/libpng_write_fuzzer.cc.html'>src/libpng/contrib/oss-fuzz/libpng_write_fuzzer.cc</a></pre>
+              </td>
+            <td class='column-entry-yellow'>
+        <pre> 94.15% (177/188)</pre>
+      </td>
+            <td class='column-entry-yellow'>
+        <pre> 88.89% (8/9)</pre>
+      </td>
+            <td class='column-entry-yellow'>
+        <pre> 89.86% (133/148)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/png.c.html'>src/libpng/png.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 13.56% (231/1704)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 19.40% (13/67)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 14.09% (183/1299)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngerror.c.html'>src/libpng/pngerror.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 19.54% (77/394)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 33.33% (9/27)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 20.42% (58/284)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngget.c.html'>src/libpng/pngget.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  1.07% (8/749)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  2.78% (2/72)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  1.17% (10/853)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngmem.c.html'>src/libpng/pngmem.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 67.57% (75/111)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 69.23% (9/13)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 63.74% (58/91)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngread.c.html'>src/libpng/pngread.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/2250)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/38)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/1904)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngrio.c.html'>src/libpng/pngrio.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/26)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/2)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/11)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngrtran.c.html'>src/libpng/pngrtran.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/3397)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/48)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/2046)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngrutil.c.html'>src/libpng/pngrutil.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/2608)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/59)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  0.00% (0/6469)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngset.c.html'>src/libpng/pngset.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 18.03% (205/1137)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 24.49% (12/49)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 19.98% (168/841)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngtrans.c.html'>src/libpng/pngtrans.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  2.05% (9/439)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  4.76% (1/21)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre>  2.55% (8/314)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngwio.c.html'>src/libpng/pngwio.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 56.67% (17/30)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 66.67% (2/3)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 57.14% (8/14)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngwrite.c.html'>src/libpng/pngwrite.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 26.59% (352/1324)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 23.81% (10/42)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 24.50% (244/996)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngwtran.c.html'>src/libpng/pngwtran.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre>  8.91% (36/404)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 20.00% (1/5)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 12.12% (24/198)</pre>
+      </td>
+          </tr>
+        <tr class="light-row">
+      <td>
+                  <pre><a href='src/libpng/pngwutil.c.html'>src/libpng/pngwutil.c</a></pre>
+              </td>
+            <td class='column-entry-red'>
+        <pre> 59.33% (960/1618)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 61.11% (33/54)</pre>
+      </td>
+            <td class='column-entry-red'>
+        <pre> 56.52% (711/1258)</pre>
+      </td>
+          </tr>
+      </tbody>
+      <tfoot>
+      <tr class="light-row-bold">
+        <td>
+          <pre>Totals</pre>
+        </td>
+                <td class='column-entry-red'>
+          <pre> 13.11% (2147/16379)</pre>
+        </td>
+                <td class='column-entry-red'>
+          <pre> 19.65% (100/509)</pre>
+        </td>
+                <td class='column-entry-red'>
+          <pre>  9.60% (1605/16726)</pre>
+        </td>
+              </tr>
+    </tfoot>
+  </table>
+
+<script>
+  const SORT_COLUMN = {
+    LINE: 2,
+    FUNCTION: 3,
+    REGION: 4,
+  }
+
+  const SORT_TYPES = {
+    UNSET: -1,
+    PERCENT: 0,
+    AGGREGATE: 1,
+  }
+
+  var SORT_ORDER = {
+    [SORT_COLUMN.LINE]: [SORT_TYPES.UNSET],
+    [SORT_COLUMN.FUNCTION]: [SORT_TYPES.UNSET],
+    [SORT_COLUMN.REGION]: [SORT_TYPES.UNSET],
+  }
+
+  function sortTable(columnNumber) {
+    SORT_ORDER[columnNumber] = ++SORT_ORDER[columnNumber] % 2;
+
+    let columnSortOrder = SORT_ORDER[columnNumber];
+    let tbody = document.getElementsByTagName("tbody")[0];
+
+    [].slice.call(tbody.rows).sort(function(a, b) {
+      let aColumn = a.cells[columnNumber-1].textContent;
+      let bColumn = b.cells[columnNumber-1].textContent;
+
+      let aColumnCompare, bColumnCompare;
+      if (columnSortOrder == SORT_TYPES.PERCENT) {
+        aColumnCompare = parseFloat(/([0-9.]+)%/.exec(aColumn)[1]);
+        bColumnCompare = parseFloat(/([0-9.]+)%/.exec(bColumn)[1]);
+      } else {
+        aColumnCompare = parseInt(/\/(\d+)/.exec(aColumn)[1]);
+        bColumnCompare = parseInt(/\/(\d+)/.exec(bColumn)[1]);
+      }
+
+      return (
+          aColumnCompare < bColumnCompare ? -1:
+              aColumnCompare > bColumnCompare ? 1 : 0);
+    }).forEach(function(value, index) {
+      tbody.appendChild(value);
+    });
+  }
+
+</script>    </div>
+  </body>
+</html>
