@@ -32,15 +32,15 @@ mv scripts/pnglibconf.dfa.temp scripts/pnglibconf.dfa
 
 # build the libpng library.
 autoreconf -f -i
-./configure --with-libpng-prefix=OSS_FUZZ_
+./configure 
 make -j$(nproc) clean
 make -j$(nproc) libpng16.la
 
-# build libpng_read_fuzzer.
+# build libpng_my_read_fuzzer.
 $CXX $CXXFLAGS -std=c++11 -I. \
-     $SRC/libpng/contrib/oss-fuzz/libpng_read_fuzzer.cc \
-     -o $OUT/libpng_read_fuzzer \
-     -lFuzzingEngine .libs/libpng16.a -lz
+     $SRC/libpng/contrib/oss-fuzz/libpng_my_read_fuzzer.cc \
+     -o $OUT/libpng_my_read_fuzzer \
+     -lFuzzingEngine .libs/libpng16.a -lz -lpng
 
 # add seed corpus.
 find $SRC/libpng -name "*.png" | grep -v crashers | \
