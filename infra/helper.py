@@ -1443,8 +1443,8 @@ def run_fuzzer(args):
       '-t',
       BASE_RUNNER_IMAGE,
       'timeout',
-      '14400',  # 4 hours 14400
-      'run_fuzzer', # disable stopping on crash 
+      '300',  # 4 hours 14400
+      'run_fuzzer', 
       args.fuzzer_name,
   ] + args.fuzzer_args)
 
