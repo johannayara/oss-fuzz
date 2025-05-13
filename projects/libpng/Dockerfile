@@ -24,6 +24,7 @@ RUN git clone --depth 1 https://github.com/madler/zlib.git
 RUN git clone --depth 1 --branch v1.6.48 https://github.com/pnggroup/libpng.git
 
 COPY libpng_my_read_fuzzer.cc /src/libpng/contrib/oss-fuzz/libpng_my_read_fuzzer.cc
+#COPY test.c /src/libpng/contrib/oss-fuzz/test.c
 
 COPY build.sh $SRC
 

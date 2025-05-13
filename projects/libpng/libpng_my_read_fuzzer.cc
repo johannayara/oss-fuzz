@@ -18,10 +18,11 @@
 #include <string.h>
 
 #include <vector>
-
+#define PNG_READ_SUPPORTED
+#define PNG_SEQUENTIAL_READ_SUPPORTED
+#define PNG_READ_INTERLACING_SUPPORTED
 #define PNG_INTERNAL
-#include <png.h>
-#include <pngprefix.h>
+#include "pngpriv.h"
 
 #define PNG_CLEANUP \
   if(png_handler.png_ptr) \
@@ -141,14 +142,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_option(png_handler.png_ptr, PNG_IGNORE_ADLER32, PNG_OPTION_ON);
 #endif
 
-  // Register the unknown‐chunk handler **
-  // The last nullptr is user‐data passed to png_handle_unknown
-  png_set_read_user_chunk_fn(
-      png_handler.png_ptr,
-      png_handler.info_ptr,
-      png_handle_unknown,
-      nullptr
-  );
+  png_init_read_transformations(png_handler.png_ptr);
+
 
   // Setting up reading from buffer.
   png_handler.buf_state = new BufState();
@@ -158,8 +153,8 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_sig_bytes(png_handler.png_ptr, kPngHeaderSize);
 
   png_set_filler(png_handler.png_ptr, 0xFF, PNG_FILLER_AFTER);
-  png_init_read_transformations(png_handler.png_ptr,png_handler.info_ptr);
-
+  // png_init_read_transformations(png_handler.png_ptr,png_handler.info_ptr);
+  png_init_read_transformations(png_handler.png_ptr);
   if (setjmp(png_jmpbuf(png_handler.png_ptr))) {
     PNG_CLEANUP
     return 0;
@@ -198,7 +193,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_scale_16(png_handler.png_ptr);
   png_set_tRNS_to_alpha(png_handler.png_ptr);
 
-  png_init_read_transformations(png_handler.png_ptr,png_handler.info_ptr);
+  png_init_read_transformations(png_handler.png_ptr);
 
   int passes = png_set_interlace_handling(png_handler.png_ptr);
 
