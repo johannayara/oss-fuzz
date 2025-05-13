@@ -26,6 +26,11 @@
 cat scripts/pnglibconf.dfa | \
   sed -e "s/option STDIO/option STDIO disabled/" \
       -e "s/option WARNING /option WARNING disabled/" \
+      -e "s/^\(option WRITE_[^ ]*\) disabled/\1/" \
+      -e "s/option READ enables READ_INT_FUNCTIONS/option READ disabled/" \
+      -e "/option WRITE_tEXt/d" \
+      -e "/option WRITE_zTXt/d" \
+      -e "/option WRITE_iTXt/d" \
 > scripts/pnglibconf.dfa.temp
 mv scripts/pnglibconf.dfa.temp scripts/pnglibconf.dfa
 
