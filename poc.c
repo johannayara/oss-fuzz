@@ -23,20 +23,22 @@ int main() {
     // Intentionally pass an oversized count to trigger memcpy overflow
     // the PNG_MAX_PALETTE_LENGTH is 256, therefore we pass 256
     png_set_PLTE(png_ptr, info_ptr, small_palette, 256);
-    /*Could also get these newly apointed values 
+    // Get these newly apointed values 
     png_colorp palette;
     int num_palette;
 
     if (png_get_PLTE(png_ptr, info_ptr, &palette, &num_palette) & PNG_INFO_PLTE) {
         printf("Palette has %d entries\n", num_palette);
         // You can now read the values from `palette`, 
-        most of them are completely out of bounds
-        for (int i = 0; i < num_palette; ++i) {
-            printf("Entry %3d: %s\n",i, palette[i]);
+        // most of them are completely out of bounds
+        for (int i = 0; i < num_palette; i++) {
+            printf("Color %d: R=%d, G=%d, B=%d\n", i,
+                   palette[i].red,
+                   palette[i].green,
+                   palette[i].blue);
         }
     }
 
-    */
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     return 0;
 }

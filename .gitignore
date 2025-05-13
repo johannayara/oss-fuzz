@@ -1,6 +1,7 @@
 /.vscode/
 *.pyc
 /build/
+/libpng-1.6.18/
 *~
 .DS_Store
 *.swp
