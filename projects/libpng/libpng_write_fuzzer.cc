@@ -82,6 +82,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   const uint8_t* ptr = data;
   size_t         rem = size;
 
+  //random generator seed
+  std::srand(std::time(nullptr));
+
   PngWriteHandler handler;
 
   // 1) Create write structs
@@ -162,14 +165,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
   const png_size_t IDAT_size = rowbytes * height;
   // gAMA: 1-in-3 chance
-  if ((rem >= 2 + IDAT_size) && (read_u8(&ptr, &rem) % 3) == 0) {
+  if ((rem >= 2 + IDAT_size) && (rand() % 3 == 0)) {
     //uint16_t rg = read_u16(&ptr, &rem); //TODO: use read_u32
     double   gamma = 0.45455;  
     png_set_gAMA(handler.png_ptr, handler.info_ptr, gamma);
   }
 
   // bKGD: 1-in-4 chance
-  if ((rem >= 6 && + IDAT_size) && (read_u8(&ptr, &rem) % 4) == 0) {
+  if ((rem >= 6 && + IDAT_size) && (rand() % 4 == 0)) {
     png_color_16 bkgd;
     bkgd.index = read_u8(&ptr, &rem); 
     bkgd.red   = read_u16(&ptr, &rem);
@@ -180,7 +183,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
 
     // tEXt or ztext: 1-in-5 chance
-  if ((rem >= 2  + IDAT_size)) {
+if ((rem >= 2  + IDAT_size) && (rand() % 5 == 0)) {
     png_text text;
     uint8_t ct0 = read_u8(&ptr, &rem);
 
@@ -200,7 +203,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
   
   // pHYs: 1-in-4 chance
-  if ((rem >= 9 + IDAT_size) && (read_u8(&ptr, &rem) % 4) == 0) {
+  if ((rem >= 9 + IDAT_size) && (rand() % 4 == 0)) {
     png_uint_32 x_pixels_per_unit = read_u32(&ptr, &rem);
     png_uint_32 y_pixels_per_unit = read_u32(&ptr, &rem);
     int unit_specifier = read_u8(&ptr, &rem) % 2;
@@ -209,7 +212,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
 
   // tIME: 1-in-4 chance
-  if ((rem >= 7 + IDAT_size) && (read_u8(&ptr, &rem) % 4) == 0) {
+  if ((rem >= 7 + IDAT_size) && (rand() % 4 == 0)) {
     png_timep mod_time = (png_timep)png_malloc(handler.png_ptr, sizeof(png_time));
     if (!mod_time) return 0;
     mod_time->year = read_u16(&ptr, &rem);
@@ -223,7 +226,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   }
 
   //cHRM: 1-in-25 chance
-  if ((rem >= 32 + IDAT_size) && (read_u8(&ptr, &rem) % 25) == 0) {
+  if ((rem >= 32 + IDAT_size) && (rand() % 25) == 0) {
     png_fixed_point white_x = read_u32(&ptr, &rem);
     png_fixed_point white_y = read_u32(&ptr, &rem);
     png_fixed_point red_x = read_u32(&ptr, &rem);
