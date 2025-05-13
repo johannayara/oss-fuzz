@@ -5,6 +5,8 @@
 
 RUNS=3
 
+export OSSFUZZ_PULL=true
+
 # Build the Docker image for libpng
 python3 infra/helper.py build_image libpng
 
