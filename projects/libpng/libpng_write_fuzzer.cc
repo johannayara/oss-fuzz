@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <vector>
+#include <time.h>
 
 #define PNG_INTERNAL
 #include "png.h"
@@ -83,7 +84,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data,
   size_t         rem = size;
 
   //random generator seed
-  std::srand(std::time(nullptr));
+  srand(time(nullptr));
 
   PngWriteHandler handler;
 
