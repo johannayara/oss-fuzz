@@ -53,10 +53,10 @@ This part provides scripts to run the libpng_read_fuzzer, with and without seeds
 ./run.w_corpus.sh [optional directory name]
 ```
 
-We have also provided a script that shows the coverage generated, to be able to run this script requires that the corpus be located in `/build/out` and that its name be passed to the script. This script will start a local server where the coverage can be seen. 
+We have also provided a script that shows the coverage generated, to be able to run ; this script requires that the corpus be located in `/build/out` and that its name be passed to the script. This script will start a local server where the coverage can be seen. If no name is given it will look for our merged coverage. 
 #### Example usage of coverage script
 ```bash
-./show_coverage.sh <required corpus directory name>
+./show_coverage.sh [optional corpus directory name]
 ```
 The other way to visualize coverage is to go to the `part1/report/w_corpus` or `part1/report/w_o_corpus` directories and run the html files. 
 #### Example usage of html files
