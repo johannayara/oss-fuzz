@@ -204,53 +204,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_packing(png_handler.png_ptr);
   png_set_gray_to_rgb(png_handler.png_ptr);
 
-{
-  PngObjectHandler err;
-  // create structs but *don't* read IHDR
-  err.png_ptr  = png_create_read_struct(PNG_LIBPNG_VER_STRING,
-                                        nullptr, nullptr, nullptr);
-  if (err.png_ptr) {
-    err.info_ptr = png_create_info_struct(err.png_ptr);
-  }
-
-  if (err.png_ptr && err.info_ptr) {
-    // helper macro to catch png_error longjmp
-    #define TRY_CALL(call)                \
-      do {                                \
-        if (setjmp(png_jmpbuf(err.png_ptr))) { /* recovered */ } \
-        else { call; }                    \
-      } while (0)
-
-    // out-of-sequence calls
-    TRY_CALL(png_read_transform_info(err.png_ptr, err.info_ptr));
-    TRY_CALL(png_set_strip_alpha(err.png_ptr));
-    TRY_CALL(png_set_swap(err.png_ptr));
-    TRY_CALL(png_set_swap_alpha(err.png_ptr));
-    TRY_CALL(png_set_packing(err.png_ptr));
-    TRY_CALL(png_set_gray_to_rgb(err.png_ptr));
-
-    // invalid filler location
-    TRY_CALL(png_set_filler(err.png_ptr, 0x00, -1));
-    TRY_CALL(png_set_filler(err.png_ptr, 0x00,  3));
-
-    // weird interlace handling
-    TRY_CALL(png_set_interlace_handling(err.png_ptr));
-
-    // grayscale-to-rgb when color_type already RGB
-    err.info_ptr->color_type = PNG_COLOR_TYPE_RGB;
-    TRY_CALL(png_set_gray_to_rgb(err.png_ptr));
-
-    // swap on non-16-bit
-    TRY_CALL(png_set_swap(err.png_ptr));
-
-    // swap_alpha on non-RGBA
-    err.info_ptr->color_type = PNG_COLOR_TYPE_GRAY_ALPHA;
-    TRY_CALL(png_set_swap_alpha(err.png_ptr));
-
-    #undef TRY_CALL
-  }
-}
-
   png_read_update_info(png_handler.png_ptr, png_handler.info_ptr);
 
   png_handler.row_ptr = png_malloc(
@@ -279,10 +232,14 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     return 0;
   }
 
-  image.format = PNG_FORMAT_RGBA;
+  image.format = PNG_FORMAT_RGBA_COLORMAP;
   std::vector<png_byte> buffer(PNG_IMAGE_SIZE(image));
-  png_image_finish_read(&image, NULL, buffer.data(), 0, NULL);
-#endif
-
-  return 0;
+  if ((image.format & PNG_FORMAT_FLAG_COLORMAP) != 0 &&
+    image.colormap_entries > 0) {
+    // Allocate a dummy colormap: each entry is RGBA = 4 bytes
+    std::vector<png_byte> dummy_colormap(image.colormap_entries * 4, 0);
+    png_image_finish_read(&image, NULL, buffer.data(), 0, dummy_colormap.data());
+} else {
+    png_image_finish_read(&image, NULL, buffer.data(), 0, NULL);
 }
+#endif
