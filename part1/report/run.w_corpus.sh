@@ -20,7 +20,7 @@ fi
 
 # Create directory with provided name 
 NAME="${1:-}"
-DIR="build/out/${NAME}w_corpus"
+DIR="build/out/${NAME}w_corpus_urs"
 
 echo "Created directory: $DIR"
 
