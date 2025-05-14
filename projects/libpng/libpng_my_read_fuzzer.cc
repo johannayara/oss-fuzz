@@ -243,3 +243,6 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
     png_image_finish_read(&image, NULL, buffer.data(), 0, NULL);
 }
 #endif
+
+  return 0; 
+}

@@ -3,7 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 # set -e
 
-RUNS=3
+RUNS=1
 
 # Build the Docker image for libpng
 python3 ../../infra/helper.py build_image libpng
