@@ -23,7 +23,8 @@ int main() {
     // Intentionally pass an oversized count to trigger memcpy overflow
     // the PNG_MAX_PALETTE_LENGTH is 256, therefore we pass 256
     png_set_PLTE(png_ptr, info_ptr, small_palette, 256);
-    // Get these newly apointed values 
+#ifdef LEAK_MEM
+    // Get these newly appointed values 
     png_colorp palette;
     int num_palette;
 
@@ -38,6 +39,7 @@ int main() {
                    palette[i].blue);
         }
     }
+#endif
 
     png_destroy_read_struct(&png_ptr, &info_ptr, NULL);
     return 0;
