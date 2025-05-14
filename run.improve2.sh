@@ -8,6 +8,7 @@ set -e
 DIR="build/out/write_corpus_4hours"
 
 echo "Created directory: $DIR"
+
 export OSSFUZZ_PULL=true
 # Build the Docker image for libpng
 python3 infra/helper.py build_image libpng

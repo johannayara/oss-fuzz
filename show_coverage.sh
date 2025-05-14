@@ -3,7 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-DIR="report_coverage"
+DIR="build/out/write_corpus_4hours"
 
 if [ -f "$DIR" ]; then
   echo "Found directory: $DIR"
