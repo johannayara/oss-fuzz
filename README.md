@@ -60,7 +60,7 @@
 Only Docker is required.
 
 ## Example of code usage
-`run_improve2.sh` builds our image and builds our fuzzer in build/out/write_corpus_4h. This will run for 4 hour
+`run_improve2.sh` builds our image and builds our fuzzer in build/out/write_corpus_4h. This will run for 4 hours.
 `show_coverage.sh` builds fuzzer with coverage instrumentation and generates coverage report
 
 ```bash
