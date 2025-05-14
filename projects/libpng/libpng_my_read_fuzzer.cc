@@ -142,8 +142,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_option(png_handler.png_ptr, PNG_IGNORE_ADLER32, PNG_OPTION_ON);
 #endif
 
-  png_init_read_transformations(png_handler.png_ptr);
-
+  // png_init_read_transformations(png_handler.png_ptr);
 
   // Setting up reading from buffer.
   png_handler.buf_state = new BufState();
@@ -153,8 +152,9 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_sig_bytes(png_handler.png_ptr, kPngHeaderSize);
 
   png_set_filler(png_handler.png_ptr, 0xFF, PNG_FILLER_AFTER);
-  // png_init_read_transformations(png_handler.png_ptr,png_handler.info_ptr);
-  png_init_read_transformations(png_handler.png_ptr);
+  
+  // png_init_read_transformations(png_handler.png_ptr);
+  
   if (setjmp(png_jmpbuf(png_handler.png_ptr))) {
     PNG_CLEANUP
     return 0;
@@ -193,9 +193,63 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t* data, size_t size) {
   png_set_scale_16(png_handler.png_ptr);
   png_set_tRNS_to_alpha(png_handler.png_ptr);
 
-  png_init_read_transformations(png_handler.png_ptr);
+  // png_init_read_transformations(png_handler.png_ptr);
 
   int passes = png_set_interlace_handling(png_handler.png_ptr);
+
+  png_read_transform_info(png_handler.png_ptr, png_handler.info_ptr);
+  png_set_strip_alpha(png_handler.png_ptr);
+  png_set_swap(png_handler.png_ptr);
+  png_set_swap_alpha(png_handler.png_ptr);
+  png_set_packing(png_handler.png_ptr);
+  png_set_gray_to_rgb(png_handler.png_ptr);
+
+{
+  PngObjectHandler err;
+  // create structs but *don't* read IHDR
+  err.png_ptr  = png_create_read_struct(PNG_LIBPNG_VER_STRING,
+                                        nullptr, nullptr, nullptr);
+  if (err.png_ptr) {
+    err.info_ptr = png_create_info_struct(err.png_ptr);
+  }
+
+  if (err.png_ptr && err.info_ptr) {
+    // helper macro to catch png_error longjmp
+    #define TRY_CALL(call)                \
+      do {                                \
+        if (setjmp(png_jmpbuf(err.png_ptr))) { /* recovered */ } \
+        else { call; }                    \
+      } while (0)
+
+    // out-of-sequence calls
+    TRY_CALL(png_read_transform_info(err.png_ptr, err.info_ptr));
+    TRY_CALL(png_set_strip_alpha(err.png_ptr));
+    TRY_CALL(png_set_swap(err.png_ptr));
+    TRY_CALL(png_set_swap_alpha(err.png_ptr));
+    TRY_CALL(png_set_packing(err.png_ptr));
+    TRY_CALL(png_set_gray_to_rgb(err.png_ptr));
+
+    // invalid filler location
+    TRY_CALL(png_set_filler(err.png_ptr, 0x00, -1));
+    TRY_CALL(png_set_filler(err.png_ptr, 0x00,  3));
+
+    // weird interlace handling
+    TRY_CALL(png_set_interlace_handling(err.png_ptr));
+
+    // grayscale-to-rgb when color_type already RGB
+    err.info_ptr->color_type = PNG_COLOR_TYPE_RGB;
+    TRY_CALL(png_set_gray_to_rgb(err.png_ptr));
+
+    // swap on non-16-bit
+    TRY_CALL(png_set_swap(err.png_ptr));
+
+    // swap_alpha on non-RGBA
+    err.info_ptr->color_type = PNG_COLOR_TYPE_GRAY_ALPHA;
+    TRY_CALL(png_set_swap_alpha(err.png_ptr));
+
+    #undef TRY_CALL
+  }
+}
 
   png_read_update_info(png_handler.png_ptr, png_handler.info_ptr);
 
