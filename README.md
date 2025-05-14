@@ -14,13 +14,123 @@ This project structure has been edited to highlight the most important zones.
 ├── help/
 ├── infra/
 │   ├── helper.py/
-├── libpng-1.6.18/   # vulnerable version of libpng, only on branch part 4
+├── libpng-1.6.18/   # vulnerable version of libpng, only used on branch part4
 ├── part1/
-│   └── report/
-│       ├── w_corpus/
-│       └── w_o_corpus/
-└── projects/
-    └── libpng/
+│   ├── merged_w_corpus/ # merged corpuses of all 3 x 4 hours runs
+│   │   └──src/ #inital corpus
+│   └── report/
+│       ├── add_seeds.diff 
+│       ├── comment_seeds.diff
+│       ├── oss_fuzz.diff
+│       ├── run.w_corpus.sh
+│       ├── run.w_o_corpus.sh
+│       ├── w_corpus/
+│       │   ├── directory_view_index.html
+│       │   ├── file_view_index.html
+│       │   ├── index.html
+│       │   ├── report.html
+│       │   ├── src/
+│       │   │   ├── libpng/
+│       │   │   │   ├── contrib/
+│       │   │   │   │   ├── oss-fuzz/
+│       │   │   │   │   │   ├── libpng_read_fuzzer.cc.html
+│       │   │   │   │   │   └── report.html
+│       │   │   │   │   └── report.html
+│       │   │   │   ├── png.c.html
+│       │   │   │   ├── pngdebug.h.html
+│       │   │   │   ├── pngerror.c.html
+│       │   │   │   ├── pngget.c.html
+│       │   │   │   ├── png.h.html
+│       │   │   │   ├── pnglibconf.h.html
+│       │   │   │   ├── pngmem.c.html
+│       │   │   │   ├── pngprefix.h.html
+│       │   │   │   ├── pngpriv.h.html
+│       │   │   │   ├── pngread.c.html
+│       │   │   │   ├── pngrio.c.html
+│       │   │   │   ├── pngrtran.c.html
+│       │   │   │   ├── pngrutil.c.html
+│       │   │   │   ├── pngset.c.html
+│       │   │   │   ├── pngstruct.h.html
+│       │   │   │   ├── pngtrans.c.html
+│       │   │   │   └── report.html
+│       │   │   └── report.html
+│       │   ├── style.css
+│       │   └── summary.json
+│       └── w_o_corpus/
+│           ├── directory_view_index.html
+│           ├── file_view_index.html
+│           ├── index.html
+│           ├── report.html
+│           ├── src/
+│           │   ├── libpng/
+│           │   │   ├── contrib/
+│           │   │   │   ├── oss-fuzz/
+│           │   │   │   │   ├── libpng_read_fuzzer.cc.html
+│           │   │   │   │   └── report.html
+│           │   │   │   └── report.html
+│           │   │   ├── png.c.html
+│           │   │   ├── pngdebug.h.html
+│           │   │   ├── pngerror.c.html
+│           │   │   ├── pngget.c.html
+│           │   │   ├── png.h.html
+│           │   │   ├── pnglibconf.h.html
+│           │   │   ├── pngmem.c.html
+│           │   │   ├── pngprefix.h.html
+│           │   │   ├── pngpriv.h.html
+│           │   │   ├── pngread.c.html
+│           │   │   ├── pngrio.c.html
+│           │   │   ├── pngrtran.c.html
+│           │   │   ├── pngrutil.c.html
+│           │   │   ├── pngset.c.html
+│           │   │   ├── pngstruct.h.html
+│           │   │   ├── pngtrans.c.html
+│           │   │   └── report.html
+│           │   └── report.html
+│           ├── style.css
+│           └── summary.json
+├── part1/
+│   └── coverage_noimprove/
+│       ├── linux/
+│       │   ├── directory_view_index.html
+│       │   ├── file_view_index.html
+│       │   ├── index.html
+│       │   ├── report.html
+│       │   ├── src/
+│       │   │   ├── libpng/
+│       │   │   │   ├── contrib/
+│       │   │   │   │   ├── oss-fuzz/
+│       │   │   │   │   │   ├── libpng_read_fuzzer.cc.html
+│       │   │   │   │   │   └── report.html
+│       │   │   │   │   └── report.html
+│       │   │   │   ├── png.c.html
+│       │   │   │   ├── pngdebug.h.html
+│       │   │   │   ├── pngerror.c.html
+│       │   │   │   ├── pngget.c.html
+│       │   │   │   ├── png.h.html
+│       │   │   │   ├── pnglibconf.h.html
+│       │   │   │   ├── pngmem.c.html
+│       │   │   │   ├── pngprefix.h.html
+│       │   │   │   ├── pngpriv.h.html
+│       │   │   │   ├── pngread.c.html
+│       │   │   │   ├── pngrio.c.html
+│       │   │   │   ├── pngrtran.c.html
+│       │   │   │   ├── pngrutil.c.html
+│       │   │   │   ├── pngset.c.html
+│       │   │   │   ├── pngstruct.h.html
+│       │   │   │   ├── pngtrans.c.html
+│       │   │   │   └── report.html
+│       │   │   └── report.html
+│       │   └── summary.json
+│       └── style.css
+│   projects/
+│   └── libpng/
+│       ├── build.sh # our build.sh taken from libpng's repository
+│       ├── Dockerfile # our dockerfile taken from oss-fuzzes' repository
+│       └── project.yaml # project.yaml from oss-fuzzes' repository
+├── README.md  # this file
+├──show_coverage.sh  # script to show coverage using libpng_read_fuzzer
+└──tools/
+
 ```
 
 ## Setup
