@@ -8,7 +8,6 @@
 ├── README.md
 ├── docs/
 ├── infra/
-├── part1/
 ├── part3 #directory of this part
 │   └── libpng_write_fuzzer 
 │       ├── linux
@@ -52,7 +51,7 @@
 │       ├── build.sh
 │       ├── libpng_write_fuzzer.cc # the write fuzzer
 │       └── project.yaml
-├── run_improve2.sh
+├── run.improve2.sh
 ├── show_coverage.sh
 └── tools/
 ```
@@ -60,10 +59,10 @@
 Only Docker is required.
 
 ## Example of code usage
-`run_improve2.sh` builds the Docker image and our fuzzer in build/out/write_corpus_4h. This will run for 4 hours.
+`run.improve2.sh` builds the Docker image and our fuzzer in build/out/write_corpus_4h. This will run for 4 hours.
 `show_coverage.sh` builds fuzzer with coverage instrumentation and generates coverage report
 
 ```bash
-./run_improve2.sh 
+./run.improve2.sh 
 ./show_coverage.sh 
 ```
