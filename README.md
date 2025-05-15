@@ -10,128 +10,126 @@ Libpng and OSS-Fuzz are written in C/C++. OSS-Fuzz supports fuzzing x86_64 and i
 This project structure has been edited to highlight the most important zones.
 ```
 .
-├── build/
+├── CITATION.cff
+├── CONTRIBUTING.md
 ├── docs/
-├── help/
 ├── infra/
-│   ├── helper.py/
-├── libpng-1.6.18/   # vulnerable version of libpng, only used on branch part4
+│   ├── helper.py
+|   ...
+├── LICENSE
 ├── part1/
-│   ├── merged_w_corpus/ # merged corpuses of all 3 x 4 hours runs
-│   │   └──src/ #inital corpus
-│   └── report/
-│       ├── add_seeds.diff 
-│       ├── comment_seeds.diff
-│       ├── oss_fuzz.diff
-│       ├── run.w_corpus.sh
-│       ├── run.w_o_corpus.sh
-│       ├── w_corpus/
-│       │   ├── directory_view_index.html
-│       │   ├── file_view_index.html
-│       │   ├── index.html
-│       │   ├── report.html
-│       │   ├── src/
-│       │   │   ├── libpng/
-│       │   │   │   ├── contrib/
-│       │   │   │   │   ├── oss-fuzz/
-│       │   │   │   │   │   ├── libpng_read_fuzzer.cc.html
-│       │   │   │   │   │   └── report.html
-│       │   │   │   │   └── report.html
-│       │   │   │   ├── png.c.html
-│       │   │   │   ├── pngdebug.h.html
-│       │   │   │   ├── pngerror.c.html
-│       │   │   │   ├── pngget.c.html
-│       │   │   │   ├── png.h.html
-│       │   │   │   ├── pnglibconf.h.html
-│       │   │   │   ├── pngmem.c.html
-│       │   │   │   ├── pngprefix.h.html
-│       │   │   │   ├── pngpriv.h.html
-│       │   │   │   ├── pngread.c.html
-│       │   │   │   ├── pngrio.c.html
-│       │   │   │   ├── pngrtran.c.html
-│       │   │   │   ├── pngrutil.c.html
-│       │   │   │   ├── pngset.c.html
-│       │   │   │   ├── pngstruct.h.html
-│       │   │   │   ├── pngtrans.c.html
-│       │   │   │   └── report.html
-│       │   │   └── report.html
-│       │   ├── style.css
-│       │   └── summary.json
-│       └── w_o_corpus/
-│           ├── directory_view_index.html
-│           ├── file_view_index.html
-│           ├── index.html
-│           ├── report.html
-│           ├── src/
-│           │   ├── libpng/
-│           │   │   ├── contrib/
-│           │   │   │   ├── oss-fuzz/
-│           │   │   │   │   ├── libpng_read_fuzzer.cc.html
-│           │   │   │   │   └── report.html
-│           │   │   │   └── report.html
-│           │   │   ├── png.c.html
-│           │   │   ├── pngdebug.h.html
-│           │   │   ├── pngerror.c.html
-│           │   │   ├── pngget.c.html
-│           │   │   ├── png.h.html
-│           │   │   ├── pnglibconf.h.html
-│           │   │   ├── pngmem.c.html
-│           │   │   ├── pngprefix.h.html
-│           │   │   ├── pngpriv.h.html
-│           │   │   ├── pngread.c.html
-│           │   │   ├── pngrio.c.html
-│           │   │   ├── pngrtran.c.html
-│           │   │   ├── pngrutil.c.html
-│           │   │   ├── pngset.c.html
-│           │   │   ├── pngstruct.h.html
-│           │   │   ├── pngtrans.c.html
-│           │   │   └── report.html
-│           │   └── report.html
-│           ├── style.css
-│           └── summary.json
-├── part1/
-│   └── coverage_noimprove/
-│       ├── linux/
-│       │   ├── directory_view_index.html
-│       │   ├── file_view_index.html
-│       │   ├── index.html
-│       │   ├── report.html
-│       │   ├── src/
-│       │   │   ├── libpng/
-│       │   │   │   ├── contrib/
-│       │   │   │   │   ├── oss-fuzz/
-│       │   │   │   │   │   ├── libpng_read_fuzzer.cc.html
-│       │   │   │   │   │   └── report.html
-│       │   │   │   │   └── report.html
-│       │   │   │   ├── png.c.html
-│       │   │   │   ├── pngdebug.h.html
-│       │   │   │   ├── pngerror.c.html
-│       │   │   │   ├── pngget.c.html
-│       │   │   │   ├── png.h.html
-│       │   │   │   ├── pnglibconf.h.html
-│       │   │   │   ├── pngmem.c.html
-│       │   │   │   ├── pngprefix.h.html
-│       │   │   │   ├── pngpriv.h.html
-│       │   │   │   ├── pngread.c.html
-│       │   │   │   ├── pngrio.c.html
-│       │   │   │   ├── pngrtran.c.html
-│       │   │   │   ├── pngrutil.c.html
-│       │   │   │   ├── pngset.c.html
-│       │   │   │   ├── pngstruct.h.html
-│       │   │   │   ├── pngtrans.c.html
-│       │   │   │   └── report.html
-│       │   │   └── report.html
-│       │   └── summary.json
-│       └── style.css
-│   projects/
-│   └── libpng/
-│       ├── build.sh # our build.sh taken from libpng's repository
-│       ├── Dockerfile # our dockerfile taken from oss-fuzzes' repository
-│       └── project.yaml # project.yaml from oss-fuzzes' repository
-├── README.md  # this file
-├──show_coverage.sh  # script to show coverage using libpng_read_fuzzer
-└──tools/
-
+│   └── report/
+│       ├── add_seeds.diff
+│       ├── comment_seeds.diff
+│       ├── oss_fuzz.diff
+│       ├── run.w_corpus.sh
+│       ├── run.w_o_corpus.sh
+│       ├── w_corpus/ # main html file to see coverage report with seeds
+│       │   ├── directory_view_index.html
+│       │   ├── file_view_index.html
+│       │   ├── index.html
+│       │   ├── report.html
+│       │   ├── src/
+│       │   │   ├── libpng/
+│       │   │   │   ├── contrib/
+│       │   │   │   │   ├── oss-fuzz/
+│       │   │   │   │   │   ├── libpng_read_fuzzer.cc.html
+│       │   │   │   │   │   └── report.html
+│       │   │   │   │   └── report.html
+│       │   │   │   ├── png.c.html
+│       │   │   │   ├── pngdebug.h.html
+│       │   │   │   ├── pngerror.c.html
+│       │   │   │   ├── pngget.c.html
+│       │   │   │   ├── png.h.html
+│       │   │   │   ├── pnglibconf.h.html
+│       │   │   │   ├── pngmem.c.html
+│       │   │   │   ├── pngprefix.h.html
+│       │   │   │   ├── pngpriv.h.html
+│       │   │   │   ├── pngread.c.html
+│       │   │   │   ├── pngrio.c.html
+│       │   │   │   ├── pngrtran.c.html
+│       │   │   │   ├── pngrutil.c.html
+│       │   │   │   ├── pngset.c.html
+│       │   │   │   ├── pngstruct.h.html
+│       │   │   │   ├── pngtrans.c.html
+│       │   │   │   └── report.html
+│       │   │   └── report.html
+│       │   ├── style.css
+│       │   └── summary.json
+│       └── w_o_corpus/
+│           ├── directory_view_index.html
+│           ├── file_view_index.html
+│           ├── index.html # main html file to see coverage report w/o seeds
+│           ├── report.html
+│           ├── src/
+│           │   ├── libpng/
+│           │   │   ├── contrib/
+│           │   │   │   ├── oss-fuzz/
+│           │   │   │   │   ├── libpng_read_fuzzer.cc.html
+│           │   │   │   │   └── report.html
+│           │   │   │   └── report.html
+│           │   │   ├── png.c.html
+│           │   │   ├── pngdebug.h.html
+│           │   │   ├── pngerror.c.html
+│           │   │   ├── pngget.c.html
+│           │   │   ├── png.h.html
+│           │   │   ├── pnglibconf.h.html
+│           │   │   ├── pngmem.c.html
+│           │   │   ├── pngprefix.h.html
+│           │   │   ├── pngpriv.h.html
+│           │   │   ├── pngread.c.html
+│           │   │   ├── pngrio.c.html
+│           │   │   ├── pngrtran.c.html
+│           │   │   ├── pngrutil.c.html
+│           │   │   ├── pngset.c.html
+│           │   │   ├── pngstruct.h.html
+│           │   │   ├── pngtrans.c.html
+│           │   │   └── report.html
+│           │   └── report.html
+│           ├── style.css
+│           └── summary.json
+├── part3/
+│   ├── coverage_noimprove/
+│   │   ├── linux/
+│   │   │   ├── directory_view_index.html
+│   │   │   ├── file_view_index.html
+│   │   │   ├── index.html
+│   │   │   ├── report.html
+│   │   │   ├── src/
+│   │   │   │   ├── libpng/
+│   │   │   │   │   ├── contrib/
+│   │   │   │   │   │   ├── oss-fuzz/
+│   │   │   │   │   │   │   ├── libpng_read_fuzzer.cc.html
+│   │   │   │   │   │   │   └── report.html
+│   │   │   │   │   │   └── report.html
+│   │   │   │   │   ├── png.c.html
+│   │   │   │   │   ├── pngdebug.h.html
+│   │   │   │   │   ├── pngerror.c.html
+│   │   │   │   │   ├── pngget.c.html
+│   │   │   │   │   ├── png.h.html
+│   │   │   │   │   ├── pnglibconf.h.html
+│   │   │   │   │   ├── pngmem.c.html
+│   │   │   │   │   ├── pngprefix.h.html
+│   │   │   │   │   ├── pngpriv.h.html
+│   │   │   │   │   ├── pngread.c.html
+│   │   │   │   │   ├── pngrio.c.html
+│   │   │   │   │   ├── pngrtran.c.html
+│   │   │   │   │   ├── pngrutil.c.html
+│   │   │   │   │   ├── pngset.c.html
+│   │   │   │   │   ├── pngstruct.h.html
+│   │   │   │   │   ├── pngtrans.c.html
+│   │   │   │   │   └── report.html
+│   │   │   │   └── report.html
+│   │   │   └── summary.json
+│   │   └── style.css
+├── projects/
+│   └── libpng/
+│       ├── build.sh # our build.sh taken from libpng's repository
+│       ├── Dockerfile # our dockerfile taken from oss-fuzzes' repository
+│       └── project.yaml # project.yaml from oss-fuzzes' repository
+├── README.md # this file
+├── show_coverage.sh # script to show coverage using libpng_read_fuzzer
+└── tools/
 ```
 
 ## Setup
@@ -157,7 +155,8 @@ To run the scripts provided in this project, you must have Docker installed.
 
 ## Part 1
 
-This section contains scripts to execute `libpng_read_fuzzer`, both with and without seed inputs. If a corpus name is provided, a corresponding directory will be created under `build/out/`.
+This section contains scripts to execute `libpng_read_fuzzer`, both with and without seed inputs. If a corpus name is provided, a corresponding directory will be created under `build/out/`. All scripts are meant to be run from their own folder.
+
 
 #### Example Usage with seeds
 ```bash
@@ -194,7 +193,7 @@ We created three `.diff` files to document modifications:
 
 ## Part 3
 ### First improvement 
-
+For our first improvment, we chose to improve the existing harness thus creating `new_libpng_read_fuzzer.c`. Our code as well as a dedicated `ReadMe` can be found on our [new_read_fuzzer](https://github.com/johannayara/oss-fuzz/tree/new_read_fuzzer) branch.
 
 ### Second improvement
 For our second improvment, we chose to write a `libpng_write_fuzzer.c`, to be able to test the writing part of the `libpng` API. Our code as well as a dedicated `ReadMe` can be found on our [write_fuzzer](https://github.com/johannayara/oss-fuzz/tree/write_fuzzer) branch.

@@ -3,15 +3,8 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# First argument: directory name is required 
-DIR="${1:-"part1/merged_w_corpus"}"
-if [ -z "$DIR" ]; then
-  echo "Usage: $0 [name]"
-  exit 1
-fi
-
-
-# DIR="build/out/${NAME}"
+# First argument: directory name is optional 
+DIR="${1:-"build/out/merged_w_corpus"}"
 
 if [ -f "$DIR" ]; then
   echo "Found directory: $DIR"
