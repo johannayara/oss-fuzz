@@ -3,7 +3,12 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-DIR="build/out/write_corpus_4hours"
+# First argument: directory name is required 
+DIR="${1:-"build/out/merg_improv2"}"
+if [ -z "$DIR" ]; then
+  echo "Usage: $0 <dir>"
+  exit 1
+fi
 
 if [ -f "$DIR" ]; then
   echo "Found directory: $DIR"
@@ -14,7 +19,6 @@ python3 infra/helper.py build_fuzzers --sanitizer coverage libpng
 
 # Build the fuzzers for libpng
 python3 infra/helper.py coverage libpng --corpus-dir "$DIR" --fuzz-target libpng_write_fuzzer 
-
 
 
 
