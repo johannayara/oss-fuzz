@@ -48,6 +48,8 @@ This branch is dedicated to our libpng write fuzzer, its scripts and its results
 │       │   │   └── report.html
 │       │   └── summary.json
 │       ├── run.improve2.sh
+│       ├── projects.diff
+│       ├── oss_fuzz.diff       
 │       └── style.css
 ├── projects/ 
 │   └── libpng/ # directory with everything to run our fuzzer
