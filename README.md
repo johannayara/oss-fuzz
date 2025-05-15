@@ -62,7 +62,7 @@ This branch is dedicated to our improved libpng read fuzzer, its scripts and its
 Only Docker is required.
 
 ## Running the improvements
-This section contains scripts to execute `new_libpng_read_fuzzer`, both for one or 3x 4 runs; with seed inputs and for generating and running a coverage report.
+This section contains scripts to execute `new_libpng_read_fuzzer`, both for one or 3x 4 runs; with seed inputs and for generating and running a coverage report. All scripts are meant to be run from their own folder.
 
 #### Example of usage for a 4 hour run
 This will run for 4 hours, if not interrupted. This script can take an optional corpus directory name as an argument, a corresponding directory will be created under `build/out/`.Otherwise the corpus will be created as `build/out/new_read_corpus_4hours`.
