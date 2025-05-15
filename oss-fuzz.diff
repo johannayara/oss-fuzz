@@ -1,0 +1,37 @@
+diff --git a/projects/libpng/Dockerfile b/projects/libpng/Dockerfile
+index 6f281cd55..6036cd1e3 100644
+--- a/projects/libpng/Dockerfile
++++ b/projects/libpng/Dockerfile
+@@ -14,11 +14,17 @@
+ #
+ ################################################################################
+ 
++
++
+ FROM gcr.io/oss-fuzz-base/base-builder
+ RUN apt-get update && \
+     apt-get install -y make autoconf automake libtool zlib1g-dev
+ 
+ RUN git clone --depth 1 https://github.com/madler/zlib.git
+-RUN git clone --depth 1 https://github.com/pnggroup/libpng.git
+-RUN cp libpng/contrib/oss-fuzz/build.sh $SRC
++RUN git clone --depth 1 --branch v1.6.48 https://github.com/pnggroup/libpng.git
++
++COPY new_libpng_read_fuzzer.cc /src/libpng/contrib/oss-fuzz/new_libpng_read_fuzzer.cc
++
++COPY build.sh $SRC
++
+ WORKDIR libpng
+diff --git a/infra/helper.py b/infra/helper.py
+index 1d03de9e8..6eac54569 100755
+--- a/infra/helper.py
++++ b/infra/helper.py
+@@ -1442,6 +1442,8 @@ def run_fuzzer(args):
+       '%s:/out' % args.project.out,
+       '-t',
+       BASE_RUNNER_IMAGE,
++      'timeout',
++      str(14400),  # 4 hours = 14400 seconds
+       'run_fuzzer',
+       args.fuzzer_name,
+   ] + args.fuzzer_args)
