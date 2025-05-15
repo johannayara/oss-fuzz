@@ -19,15 +19,15 @@ This project structure has been edited to highlight the most important zones.
 ├── LICENSE
 ├── part1/
 │   └── report/
-│       ├── add_seeds.diff
-│       ├── comment_seeds.diff
-│       ├── oss_fuzz.diff
-│       ├── run.w_corpus.sh
-│       ├── run.w_o_corpus.sh
-│       ├── w_corpus/ # main html file to see coverage report with seeds
+│       ├── add_seeds.diff # un-comment seeds in the build.sh 
+│       ├── comment_seeds.diff # comment seeds in the build.sh, also acts as our project.diff, to show the difference w.r.t the libpng project 
+│       ├── oss_fuzz.diff # diff between our project and the OSS-Fuzz's project
+│       ├── run.w_corpus.sh # script to run the fuzzer with an initial corpus
+│       ├── run.w_o_corpus.sh # script to run the fuzzer without any seeds
+│       ├── w_corpus/ 
 │       │   ├── directory_view_index.html
 │       │   ├── file_view_index.html
-│       │   ├── index.html
+│       │   ├── index.html # main html file to see coverage report with seeds
 │       │   ├── report.html
 │       │   ├── src/
 │       │   │   ├── libpng/
@@ -147,17 +147,16 @@ git clone git@github.com:johannayara/oss-fuzz.git
 ```
 ---
 
-### Requirements
+### Requirements & specifications
 
 To run the scripts provided in this project, you must have Docker installed.
-All scripts are meant to be run from their own folder.
+All scripts are meant to be run from their own folder. Please note that all scripts have prompts in them, to prompt before deleting files or pulling docker images. 
 
 ---
 
 ## Part 1
 
-This section contains scripts to execute `libpng_read_fuzzer`, both with and without seed inputs. If a corpus name is provided, a corresponding directory will be created under `build/out/`. All scripts are meant to be run from their own folder.
-
+This section contains scripts to execute `libpng_read_fuzzer`, both with and without seed inputs. If a corpus name is provided, a corresponding directory will be created under `build/out/`. All scripts are meant to be run from their own folder. 
 
 #### Example Usage with seeds
 ```bash

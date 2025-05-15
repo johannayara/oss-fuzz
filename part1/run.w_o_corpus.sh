@@ -3,6 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+cd ..
 # Remove existing seed corpus if it exists
 SEED_CORPUS="build/out/libpng/libpng_read_fuzzer_seed_corpus.zip"
 if [ -f "$SEED_CORPUS" ]; then
@@ -11,7 +12,7 @@ if [ -f "$SEED_CORPUS" ]; then
 fi
 
 # Apply the diff file
-DIFF_FILE="comment_seeds.diff"
+DIFF_FILE="part1/comment_seeds.diff"
 if [ -f "$DIFF_FILE" ]; then
   echo "Applying patch from $DIFF_FILE..."
   if git apply --check "$DIFF_FILE"; then
@@ -24,7 +25,7 @@ else
   echo "Diff file $DIFF_FILE not found! Skipping patch."
 fi
 
-
+cd part1/
 NAME="${1:-}"
 DIR="build/out/${NAME}w_o_corpus"
 

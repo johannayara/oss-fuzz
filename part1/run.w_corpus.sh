@@ -3,8 +3,9 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
+cd ..
 # Apply the diff file
-DIFF_FILE="add_seeds.diff"
+DIFF_FILE="part1/add_seeds.diff"
 if [ -f "$DIFF_FILE" ]; then
   echo "Applying patch from $DIFF_FILE..."
   if git apply --check "$DIFF_FILE"; then
@@ -17,7 +18,7 @@ else
   echo "Diff file $DIFF_FILE not found! Skipping patch."
 fi
 
-
+cd part1/
 # Create directory with provided name 
 NAME="${1:-}"
 DIR="build/out/${NAME}w_corpus"
