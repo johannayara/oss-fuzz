@@ -4,7 +4,6 @@
 set -e
 
 # First argument: directory name is optional 
-#DIR="${1:-"build/out/new_read_corpus_4hours"}"
 DIR="build/out/${1:-new_read_corpus_4hours}"
 
 if [ -z "$DIR" ]; then
