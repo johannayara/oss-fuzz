@@ -1,77 +1,92 @@
-# OSS-Fuzz: Continuous Fuzzing for Open Source Software
+# Part 3: Our improved libpng read fuzzer
+This branch is dedicated to our improved libpng read fuzzer, its scripts and its results. 
 
-[Fuzz testing] is a well-known technique for uncovering programming errors in
-software. Many of these detectable errors, like [buffer overflow], can have
-serious security implications. Google has found [thousands] of security
-vulnerabilities and stability bugs by deploying [guided in-process fuzzing of
-Chrome components], and we now want to share that service with the open source
-community.
+## Branch Structure
+```
+.
+├── CITATION.cff
+├── CONTRIBUTING.md
+├── docs/
+├── infra/
+│   ├── helper.py # helper file to build fuzzer
+│   ...
+├── LICENSE
+├── part3/
+│   └── improve1/
+│       ├── coverage_improve1/ # our coverage report
+│       │   ├── directory_view_index.html
+│       │   ├── file_view_index.html
+│       │   ├── index.html # main html file of our coverage report
+│       │   ├── report.html
+│       │   ├── src/
+│       │   │   ├── libpng/
+│       │   │   │   ├── contrib/
+│       │   │   │   │   ├── oss-fuzz/
+│       │   │   │   │   │   ├── libpng_my_read_fuzzer.cc.html
+│       │   │   │   │   │   └── report.html
+│       │   │   │   │   └── report.html
+│       │   │   │   ├── png.c.html
+│       │   │   │   ├── pngdebug.h.html
+│       │   │   │   ├── pngerror.c.html
+│       │   │   │   ├── pngget.c.html
+│       │   │   │   ├── png.h.html
+│       │   │   │   ├── pnglibconf.h.html
+│       │   │   │   ├── pngmem.c.html
+│       │   │   │   ├── pngpriv.h.html
+│       │   │   │   ├── pngread.c.html
+│       │   │   │   ├── pngrio.c.html
+│       │   │   │   ├── pngrtran.c.html
+│       │   │   │   ├── pngrutil.c.html
+│       │   │   │   ├── pngset.c.html
+│       │   │   │   ├── pngstruct.h.html
+│       │   │   │   ├── pngtrans.c.html
+│       │   │   │   └── report.html
+│       │   │   └── report.html
+│       │   └── summary.json
+│       ├── oss-fuzz.diff # the difference between this branch and the oss-fuzz project
+│       ├── project.diff # the difference between this branch and the libpng project
+│       ├── run.improve1.sh # the mains script for your improved fuzzer
+│       └── style.css
+├── projects/
+│   └── libpng/
+│       ├── build.sh
+│       ├── Dockerfile
+│       ├── new_libpng_read_fuzzer.cc # our improved harness
+│       └── project.yaml
+├── README.md # this read me 
+├── run.automated_fuzzer.sh # script to run 3x4 hours
+├── show_coverage.sh # script to generate coverage report
+└── tools/
+```
+## Requirements
+Only Docker is required.
 
-[Fuzz testing]: https://en.wikipedia.org/wiki/Fuzz_testing
-[buffer overflow]: https://en.wikipedia.org/wiki/Buffer_overflow
-[thousands]: https://issues.chromium.org/issues?q=label:Stability-LibFuzzer%20-status:Duplicate,WontFix
-[guided in-process fuzzing of Chrome components]: https://security.googleblog.com/2016/08/guided-in-process-fuzzing-of-chrome.html
+## Running the improvements
+This section contains scripts to execute `new_libpng_read_fuzzer`, both for one or 3x 4 runs; with seed inputs and for generating and running a coverage report.
 
-In cooperation with the [Core Infrastructure Initiative] and the [OpenSSF],
-OSS-Fuzz aims to make common open source software more secure and stable by
-combining modern fuzzing techniques with scalable, distributed execution.
-Projects that do not qualify for OSS-Fuzz (e.g. closed source) can run their own
-instances of [ClusterFuzz] or [ClusterFuzzLite].
+#### Example of usage for a 4 hour run
+This will run for 4 hours, if not interrupted. This script can take an optional corpus directory name as an argument, a corresponding directory will be created under `build/out/`.Otherwise the corpus will be created as `build/out/new_read_corpus_4hours`.
+```bash
+./run.improve1.sh [optional corpus directory name]
+```
 
-[Core Infrastructure Initiative]: https://www.coreinfrastructure.org/
-[OpenSSF]: https://www.openssf.org/
+We have also provided a script for viewing code coverage results. This script can take an optional corpus directory name as an argument. It launches a local server to display the coverage data. If no argument is given, it defaults to our merged coverage directory. 
+#### Example usage of coverage script
+```bash
+./show_coverage.sh [optional corpus directory name]
+```
+Alternatively, you can view the coverage reports directly by opening the HTML files found under:
+- `part3/improve1/coverage_improve1`
 
-We support the [libFuzzer], [AFL++], and [Honggfuzz] fuzzing engines in
-combination with [Sanitizers], as well as [ClusterFuzz], a distributed fuzzer
-execution environment and reporting tool.
+#### Example of opening HTML coverage report
+```bash
+firefox index.html
+```
 
-[libFuzzer]: https://llvm.org/docs/LibFuzzer.html
-[AFL++]: https://github.com/AFLplusplus/AFLplusplus
-[Honggfuzz]: https://github.com/google/honggfuzz
-[Sanitizers]: https://github.com/google/sanitizers
-[ClusterFuzz]: https://github.com/google/clusterfuzz
-[ClusterFuzzLite]: https://google.github.io/clusterfuzzlite/
+Lastly there also exists a `run.automated_fuzzer.sh` script to be able to run 3 x 4hours of our write_fuzzer. This script creates three corpuses in `build/out/`. 
 
-Currently, OSS-Fuzz supports C/C++, Rust, Go, Python, Java/JVM, and JavaScript code. Other languages
-supported by [LLVM] may work too. OSS-Fuzz supports fuzzing x86_64 and i386
-builds.
-
-[LLVM]: https://llvm.org
-
-## Overview
-![OSS-Fuzz process diagram](docs/images/process.png)
-
-## Documentation
-Read our [detailed documentation] to learn how to use OSS-Fuzz.
-
-[detailed documentation]: https://google.github.io/oss-fuzz
-
-## Trophies
-As of August 2023, OSS-Fuzz has helped identify and fix over [10,000] vulnerabilities and [36,000] bugs across [1,000] projects.
-
-[10,000]: https://bugs.chromium.org/p/oss-fuzz/issues/list?q=Type%3DBug-Security%20label%3Aclusterfuzz%20-status%3ADuplicate%2CWontFix&can=1
-[36,000]: https://bugs.chromium.org/p/oss-fuzz/issues/list?q=Type%3DBug%20label%3Aclusterfuzz%20-status%3ADuplicate%2CWontFix&can=1
-[1,000]: https://github.com/google/oss-fuzz/tree/master/projects
-
-## Blog posts
-* 2023-08-16 - [AI-Powered Fuzzing: Breaking the Bug Hunting Barrier]
-* 2023-02-01 - [Taking the next step: OSS-Fuzz in 2023]
-* 2022-09-08 - [Fuzzing beyond memory corruption: Finding broader classes of vulnerabilities automatically]
-* 2021-12-16 - [Improving OSS-Fuzz and Jazzer to catch Log4Shell]
-* 2021-03-10 - [Fuzzing Java in OSS-Fuzz]
-* 2020-12-07 - [Improving open source security during the Google summer internship program]
-* 2020-10-09 - [Fuzzing internships for Open Source Software]
-* 2018-11-06 - [A New Chapter for OSS-Fuzz]
-* 2017-05-08 - [OSS-Fuzz: Five months later, and rewarding projects]
-* 2016-12-01 - [Announcing OSS-Fuzz: Continuous fuzzing for open source software]
-
-[AI-Powered Fuzzing: Breaking the Bug Hunting Barrier]: https://security.googleblog.com/2023/08/ai-powered-fuzzing-breaking-bug-hunting.html
-[Announcing OSS-Fuzz: Continuous fuzzing for open source software]: https://opensource.googleblog.com/2016/12/announcing-oss-fuzz-continuous-fuzzing.html
-[OSS-Fuzz: Five months later, and rewarding projects]: https://opensource.googleblog.com/2017/05/oss-fuzz-five-months-later-and.html
-[A New Chapter for OSS-Fuzz]: https://security.googleblog.com/2018/11/a-new-chapter-for-oss-fuzz.html
-[Fuzzing internships for Open Source Software]: https://security.googleblog.com/2020/10/fuzzing-internships-for-open-source.html
-[Improving open source security during the Google summer internship program]: https://security.googleblog.com/2020/12/improving-open-source-security-during.html
-[Fuzzing Java in OSS-Fuzz]: https://security.googleblog.com/2021/03/fuzzing-java-in-oss-fuzz.html
-[Improving OSS-Fuzz and Jazzer to catch Log4Shell]: https://security.googleblog.com/2021/12/improving-oss-fuzz-and-jazzer-to-catch.html
-[Fuzzing beyond memory corruption: Finding broader classes of vulnerabilities automatically]: https://security.googleblog.com/2022/09/fuzzing-beyond-memory-corruption.html
-[Taking the next step: OSS-Fuzz in 2023]: https://security.googleblog.com/2023/02/taking-next-step-oss-fuzz-in-2023.html
+#### Example of usage for a 12 hour run
+This will run for 12 hours, if not interrupted. 
+```bash
+./run.automated_fuzzer.sh
+```

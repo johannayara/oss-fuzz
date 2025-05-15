@@ -3,9 +3,14 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# Create directory with provided name 
-# NAME="${1:-}"
-DIR="../../build/out/new_read_corpus_4hours"
+# First argument: directory name is optional 
+#DIR="${1:-"build/out/new_read_corpus_4hours"}"
+DIR="build/out/${1:-new_read_corpus_4hours}"
+
+if [ -z "$DIR" ]; then
+  echo "Usage: $0 [dir]"
+  exit 1
+fi
 
 echo "Created directory: $DIR"
 
@@ -17,8 +22,7 @@ python3 ../../infra/helper.py build_image libpng
 python3 ../../infra/helper.py build_fuzzers libpng
 
 # Create the output corpus directory
-#TODO : think about maybe emptying the directory if it already exists 
-mkdir -p "$DIR"
+mkdir -p "../../${DIR}"
 
 # Run the fuzzer
 python3 ../../infra/helper.py run_fuzzer libpng new_libpng_read_fuzzer --corpus-dir "$DIR"
