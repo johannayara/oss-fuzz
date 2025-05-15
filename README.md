@@ -1,4 +1,6 @@
 # Part 3: Our libpng write fuzzer
+This branch is dedicated to our libpng write fuzzer, its scripts and its results. 
+
 ## Branch Structure
 ```
 .
