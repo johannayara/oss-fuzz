@@ -78,7 +78,7 @@ We have also provided a script for viewing code coverage results. This script ca
 ./show_coverage.sh [optional corpus directory name]
 ```
 Alternatively, you can view the coverage reports directly by opening the HTML files found under:
-- `part2/imrove2/covrage_improve2`
+- `part2/improve2/covrage_improve2`
 
 #### Example of opening HTML coverage report
 ```bash
