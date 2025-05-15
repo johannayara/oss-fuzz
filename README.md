@@ -150,6 +150,7 @@ git clone git@github.com:johannayara/oss-fuzz.git
 ### Requirements
 
 To run the scripts provided in this project, you must have Docker installed.
+All scripts are meant to be run from their own folder.
 
 ---
 
