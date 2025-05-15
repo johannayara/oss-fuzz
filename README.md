@@ -21,7 +21,9 @@ Since our improvements did not trigger a crash, we chose to triage a bug. In thi
 ```
 
 ## Example of code usage 
-This script will run our PoC, if `leak_mem` is given to the script, `png_get_PLTE` will be called after `png_set_PLTE` in order to print all the `num_palette` elements. Otherwise ASAN will be used and the script will crash. The output of the script is always stored in the `out.txt`file. The script will also clean everything it built. 
+This script will run our PoC, if `leak_mem` is given to the script, `png_get_PLTE` will be called after `png_set_PLTE` in order to print all the `num_palette` elements.
+Otherwise ASAN will be used and the script will crash. The output of the script is always stored in the `out.txt`file. The script will also clean everything it built. 
 ```bash
 ./run_poc.sh [leak_mem]
 ```
+This script is meant to be run in its own folder.
