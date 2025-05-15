@@ -1,0 +1,15 @@
+diff --git a/infra/helper.py b/infra/helper.py
+index 1d03de9e8..86b3774c5 100755
+--- a/infra/helper.py
++++ b/infra/helper.py
+@@ -1442,7 +1442,9 @@ def run_fuzzer(args):
+       '%s:/out' % args.project.out,
+       '-t',
+       BASE_RUNNER_IMAGE,
+-      'run_fuzzer',
++      'timeout',
++      '14400',  # 4 hours 14400
++      'run_fuzzer', 
+       args.fuzzer_name,
+   ] + args.fuzzer_args)
+ 
