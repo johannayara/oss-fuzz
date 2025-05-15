@@ -67,6 +67,7 @@ Only Docker is required.
 
 ## Running the improvements
 This section contains scripts to execute `libpng_write_fuzzer`, both for one or 3x 4 runs, with seed inputs. If a corpus name is provided, a corresponding directory will be created under `build/out/`. Otherwise the corpus will be created as `build/out/write_corpus_4hours`.
+All scripts are meant to be run from their own folder.
 
 #### Example of usage for a 4 hour run
 This will run for 4 hours, if not interrupted. 
