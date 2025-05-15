@@ -6,7 +6,7 @@ set -e
 # First argument: directory name is required 
 DIR="${1:-"build/out/merg_improv2"}"
 if [ -z "$DIR" ]; then
-  echo "Usage: $0 <dir>"
+  echo "Usage: $0 [dir]"
   exit 1
 fi
 

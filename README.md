@@ -48,8 +48,8 @@ This branch is dedicated to our libpng write fuzzer, its scripts and its results
 │       │   │   └── report.html
 │       │   └── summary.json
 │       ├── run.improve2.sh
-│       ├── projects.diff
-│       ├── oss_fuzz.diff       
+│       ├── projects.diff # the difference between this branch and the libpng project
+│       ├── oss_fuzz.diff # the difference between this branch and the oss-fuzz project  
 │       └── style.css
 ├── projects/ 
 │   └── libpng/ # directory with everything to run our fuzzer
@@ -66,13 +66,12 @@ This branch is dedicated to our libpng write fuzzer, its scripts and its results
 Only Docker is required.
 
 ## Running the improvements
-This section contains scripts to execute `libpng_write_fuzzer`, both for one or 3x 4 runs, with seed inputs. If a corpus name is provided, a corresponding directory will be created under `build/out/`. Otherwise the corpus will be created as `build/out/write_corpus_4hours`.
-All scripts are meant to be run from their own folder.
+This section contains scripts to execute `libpng_write_fuzzer`, both for one or 3x 4 runs; with seed inputs and for generating and running a coverage report. All scripts are meant to be run from their own folder.
 
 #### Example of usage for a 4 hour run
-This will run for 4 hours, if not interrupted. 
+This will run for 4 hours, if not interrupted. This script can take an optional corpus directory name as an argument, a corresponding directory will be created under `build/out/`.Otherwise the corpus will be created as `build/out/write_corpus_4hours`.
 ```bash
-./run.improve2.sh 
+./run.improve2.sh [optional corpus directory name]
 ```
 
 We have also provided a script for viewing code coverage results. This script can take an optional corpus directory name as an argument. It launches a local server to display the coverage data. If no argument is given, it defaults to our merged coverage directory. 
@@ -81,14 +80,14 @@ We have also provided a script for viewing code coverage results. This script ca
 ./show_coverage.sh [optional corpus directory name]
 ```
 Alternatively, you can view the coverage reports directly by opening the HTML files found under:
-- `part2/improve2/covrage_improve2`
+- `part3/improve2/coverage_improve2`
 
 #### Example of opening HTML coverage report
 ```bash
 firefox index.html
 ```
 
-Lastly there also exists a `run_all_jobs.sh` script to be able to run 3 x 4hours of our write_fuzzer. This script creates three corpuses in `build/out/`. 
+Lastly there also exists a `run_all_jobs.sh` script to be able to run 3 x 4 hours of our `write_fuzzer`. This script creates three corpuses in `build/out/`. 
 
 #### Example of usage for a 12 hour run
 This will run for 12 hours, if not interrupted. 
