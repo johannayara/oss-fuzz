@@ -4,14 +4,11 @@
 set -e
 
 # First argument: directory name is required 
-NAME="${1:-}"
-if [ -z "$NAME" ]; then
-  echo "Usage: $0 <name> [port]"
+DIR="${1:-"build/out/merged_new_read_fuzzer"}"
+if [ -z "$DIR" ]; then
+  echo "Usage: $0 <dir>"
   exit 1
 fi
-
-# Second argument: port (optional, default to 8081)
-PORT="${2:-8081}"
 
 DIR="build/out/${NAME}"
 
@@ -23,8 +20,4 @@ fi
 python3 infra/helper.py build_fuzzers --sanitizer coverage libpng
 
 # Build the fuzzers for libpng
-python3 infra/helper.py coverage libpng --corpus-dir "$DIR" --fuzz-target libpng_read_fuzzer --port "$PORT"
-
-
-
-
+python3 infra/helper.py coverage libpng --corpus-dir "$DIR" --fuzz-target new_libpng_read_fuzzer
