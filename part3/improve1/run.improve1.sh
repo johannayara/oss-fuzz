@@ -6,11 +6,6 @@ set -e
 # First argument: directory name is optional 
 DIR="build/out/${1:-new_read_corpus_4hours}"
 
-if [ -z "$DIR" ]; then
-  echo "Usage: $0 [dir]"
-  exit 1
-fi
-
 echo "Created directory: $DIR"
 
 export OSSFUZZ_PULL=true

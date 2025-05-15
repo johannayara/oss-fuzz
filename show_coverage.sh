@@ -5,10 +5,6 @@ set -e
 
 # First argument: directory name is required 
 DIR="${1:-"build/out/merged_new_read_fuzzer"}"
-if [ -z "$DIR" ]; then
-  echo "Usage: $0 [dir]"
-  exit 1
-fi
 
 if [ -f "$DIR" ]; then
   echo "Found directory: $DIR"
